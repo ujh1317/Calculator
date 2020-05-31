@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         resultText = findViewById(R.id.result_text);
     }
 
+    // C, CE, ← 가 클릭 되었을 때 실행되는 메소드 - 6/01
     public void buttonClick(View view) {
-
         switch (view.getId()) {
             case R.id.all_clear_button:
                 resultNumber = 0;
@@ -55,6 +55,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // 입력된 숫자를 클리어 시켜주는 메소드 - 6/01
+    public void setClearText(String clearText){
+        isFirstInput = true;
+        resultText.setTextColor(0xFFB8B7B7);
+        resultText.setText(clearText);
+    }
+
+    // 0 ~ 9 버튼이 클릭 되었을 때 실행되는 메소드 - 6/01
     public void numButtonClick(View view) {
         Button getButton = findViewById(view.getId());
         if (isFirstInput) {
@@ -62,17 +70,44 @@ public class MainActivity extends AppCompatActivity {
             resultText.setText(getButton.getText().toString());
             isFirstInput = false;
         } else {
-            resultText.append(getButton.getText().toString());
+            if (resultText.getText().toString().equals("0")){
+                Toast.makeText(getApplicationContext(), "0으로 시작하는 정수는 없습니다.", Toast.LENGTH_SHORT).show();
+                setClearText(CLEAR_INPUT_TEXT);
+            }else {
+                resultText.append(getButton.getText().toString());
+            }
         }
-
     }
 
-    public void setClearText(String clearText){
-        isFirstInput = true;
-        resultText.setTextColor(0xFFB8B7B7);
-        resultText.setText(clearText);
+    // 연산자가 클릭 되었을 때 실행되는 메소드 - 6/01
+    public void operatorClick(View view){
+        Button getButton = findViewById(view.getId());
+
+        if (view.getId() == R.id.result_button){
+            if (isFirstInput){
+                resultNumber = 0;
+                operator = '+';
+                setClearText(CLEAR_INPUT_TEXT);
+            }else {
+                resultNumber = intcal(resultNumber, Integer.parseInt(resultText.getText().toString()), operator);
+                resultText.setText(resultNumber + "");
+                isFirstInput = true;
+            }
+
+        }else {
+            if (isFirstInput){
+                operator = getButton.getText().toString().charAt(0);
+            }else {
+                int lastNum = Integer.parseInt(resultText.getText().toString());
+                resultNumber = intcal(resultNumber, lastNum, operator);
+                operator = getButton.getText().toString().charAt(0);
+                resultText.setText(resultNumber + "");
+                isFirstInput = true;
+            }
+        }
     }
 
+    // 사칙연산을 해서 값을 반환해 주는 메소드 - 6/01
     public int intcal(int result, int lastNum, char operator){
         if (operator == '+') {
             result += lastNum;
@@ -84,22 +119,5 @@ public class MainActivity extends AppCompatActivity {
             result *= lastNum;
         }
         return result;
-    }
-
-    public void operatorClick(View view){
-        Button getButton = findViewById(view.getId());
-
-        if (view.getId() == R.id.result_button){
-            resultNumber = intcal(resultNumber, Integer.parseInt(resultText.getText().toString()), operator);
-            resultText.setText(resultNumber + "");
-            isFirstInput = true;
-        }else {
-            int lastNum = Integer.parseInt(resultText.getText().toString());
-            resultNumber = intcal(resultNumber, lastNum, operator);
-            operator = getButton.getText().toString().charAt(0);
-            resultText.setText(resultNumber + "");
-            isFirstInput = true;
-        }
-
     }
 }
