@@ -28,96 +28,78 @@ public class MainActivity extends AppCompatActivity {
 
     public void buttonClick(View view) {
 
-        Button getButton = findViewById(view.getId());
-
-        Log.e("buttonClick", "buttonClick 시작 : " + getButton.getText().toString() + " 버튼이클릭되었습니다.");
-        Log.d("buttonClick", "resultNumber = " + resultNumber);
-
         switch (view.getId()) {
             case R.id.all_clear_button:
-                isFirstInput = true;
                 resultNumber = 0;
                 operator = '+';
-                resultText.setTextColor(0xFFB8B7B7);
-                resultText.setText(CLEAR_INPUT_TEXT);
+                setClearText(CLEAR_INPUT_TEXT);
                 break;
 
             case R.id.clear_entry_button:
-                isFirstInput = true;
-                resultText.setText(CLEAR_INPUT_TEXT);
+                setClearText(CLEAR_INPUT_TEXT);
                 break;
 
             case R.id.back_space_button:
                 if (resultText.getText().toString().length() > 1) {
                     String getResultText = resultText.getText().toString();
-                    String subString = getResultText.substring(0, getResultText.length() -1);
+                    String subString = getResultText.substring(0, getResultText.length() - 1);
                     resultText.setText(subString);
-                }else {
-                    resultText.setTextColor(0xFFB8B7B7);
-                    resultText.setText(CLEAR_INPUT_TEXT);
-                    isFirstInput = true;
-                }
-                break;
-
-            case R.id.addition_button:
-            case R.id.subtraction_button:
-            case R.id.division_button:
-            case R.id.multiply_button:
-
-                int lastNum = Integer.parseInt(resultText.getText().toString());
-                if (operator == '+') {
-                    resultNumber = resultNumber + lastNum;
-                } else if (operator == '-') {
-                    resultNumber = resultNumber - lastNum;
-                } else if (operator == '÷') {
-                    resultNumber = resultNumber / lastNum;
-                } else if (operator == '×') {
-                    resultNumber = resultNumber * lastNum;
-                }
-                operator = getButton.getText().toString().charAt(0);
-                resultText.setText(resultNumber + "");
-                isFirstInput = true;
-                Log.d("buttonClick", "add resultNumber = " + resultNumber);
-                break;
-
-            case R.id.result_button:
-                if (operator == '+') {
-                    resultNumber = resultNumber + Integer.parseInt(resultText.getText().toString());
-                } else if (operator == '-') {
-                    resultNumber = resultNumber - Integer.parseInt(resultText.getText().toString());
-                } else if (operator == '÷') {
-                    resultNumber = resultNumber / Integer.parseInt(resultText.getText().toString());
-                } else if (operator == '×') {
-                    resultNumber = resultNumber * Integer.parseInt(resultText.getText().toString());
-                }
-                resultText.setText(resultNumber + "");
-                isFirstInput = true;
-                break;
-
-            case R.id.number_zero_button:
-            case R.id.number_one_button:
-            case R.id.number_two_button:
-            case R.id.number_three_button:
-            case R.id.number_four_button:
-            case R.id.number_five_button:
-            case R.id.number_six_button:
-            case R.id.number_seven_button:
-            case R.id.number_eight_button:
-            case R.id.number_nine_button:
-
-                if (isFirstInput) {
-                    resultText.setTextColor(0xFF000000);
-                    resultText.setText(getButton.getText().toString());
-                    isFirstInput = false;
                 } else {
-                    resultText.append(getButton.getText().toString());
+                    setClearText(CLEAR_INPUT_TEXT);
                 }
                 break;
 
-            default:
-//                Toast.makeText(getApplicationContext(), getButton.getText().toString() + " 버튼이클릭되었습니다.", Toast.LENGTH_LONG).show();
-                Log.e("buttonClick", "default : " + getButton.getText().toString() + " 버튼이클릭되었습니다.");
+            case R.id.decimal_button:
+                Log.e("buttonClick", "decimal_button 버튼이클릭되었습니다.");
                 break;
         }
+    }
+
+    public void numButtonClick(View view) {
+        Button getButton = findViewById(view.getId());
+        if (isFirstInput) {
+            resultText.setTextColor(0xFF000000);
+            resultText.setText(getButton.getText().toString());
+            isFirstInput = false;
+        } else {
+            resultText.append(getButton.getText().toString());
+        }
+
+    }
+
+    public void setClearText(String clearText){
+        isFirstInput = true;
+        resultText.setTextColor(0xFFB8B7B7);
+        resultText.setText(clearText);
+    }
+
+    public int intcal(int result, int lastNum, char operator){
+        if (operator == '+') {
+            result += lastNum;
+        } else if (operator == '-') {
+            result -= lastNum;
+        } else if (operator == '÷') {
+            result /= lastNum;
+        } else if (operator == '×') {
+            result *= lastNum;
+        }
+        return result;
+    }
+
+    public void operatorClick(View view){
+        Button getButton = findViewById(view.getId());
+
+        if (view.getId() == R.id.result_button){
+            resultNumber = intcal(resultNumber, Integer.parseInt(resultText.getText().toString()), operator);
+            resultText.setText(resultNumber + "");
+            isFirstInput = true;
+        }else {
+            int lastNum = Integer.parseInt(resultText.getText().toString());
+            resultNumber = intcal(resultNumber, lastNum, operator);
+            operator = getButton.getText().toString().charAt(0);
+            resultText.setText(resultNumber + "");
+            isFirstInput = true;
+        }
+
     }
 }
