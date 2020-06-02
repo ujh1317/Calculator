@@ -34,7 +34,7 @@
             android:layout_weight="50"
             android:text="0"
             android:gravity="center_vertical|right"
-            android:textSize="50dp"/>
+            android:textSize="50sp"/>
     </LinearLayout>
 
     <TextView
@@ -89,7 +89,7 @@
                 android:gravity="center"
                 android:text="÷"
                 android:textSize="30dp"
-                android:tag="÷"/>
+                android:tag="/"/>
 
         </LinearLayout>
 
@@ -143,7 +143,7 @@
                 android:gravity="center"
                 android:text="×"
                 android:textSize="30dp"
-                android:tag="×"/>
+                android:tag="*"/>
         </LinearLayout>
 
         <LinearLayout
