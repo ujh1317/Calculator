@@ -5,11 +5,11 @@ import java.text.DecimalFormat;
 public class Calculator {
 
     final String CLEAR_INPUT_TEXT = "0";
-    double mResultNumber = 0;
-    double mLastInputNumber = 0;
+    double resultNumber = 0;
+    double lastInputNumber = 0;
     String operator = "+";
 
-    // 3자리 마다 (,)표시, 소수점 5자리 까지 표시
+    // 천단위 마다 (,)표시, 소수점 5자리 까지 표시
     DecimalFormat decimalFormat = new DecimalFormat("###,###.#####");
 
     public String getDecimalString(String changeString) {
@@ -18,18 +18,18 @@ public class Calculator {
         return decimalFormat.format(Double.parseDouble(setChangeString));
     }
 
-    // method overloding
+    // method overloading
     public String getDecimalString(double changeNumber) {
         return decimalFormat.format(changeNumber);
     }
 
-    public String getclearInputText() {
+    public String getClearInputText() {
         return CLEAR_INPUT_TEXT;
     }
 
     public void setAllClear() {
-        mResultNumber = 0;
-        mLastInputNumber = 0;
+        resultNumber = 0;
+        lastInputNumber = 0;
         operator = "+";
     }
 
@@ -52,11 +52,11 @@ public class Calculator {
     }
 
     public String getResult(boolean isFirstInput, String getResultString, String lastOperator) {
-        mLastInputNumber = Double.parseDouble(getResultString.replace(",", ""));
-        mResultNumber = doubleCalculator(mResultNumber, mLastInputNumber, operator);
+        lastInputNumber = Double.parseDouble(getResultString.replace(",", ""));
+        resultNumber = doubleCalculator(resultNumber, lastInputNumber, operator);
         if (!lastOperator.equals("=")) {
             operator = lastOperator;
         }
-        return getDecimalString(mResultNumber);
+        return getDecimalString(resultNumber);
     }
 }

@@ -270,16 +270,15 @@
                 android:tag="0"
                 android:backgroundTint="#ffffff"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/decimal_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="25"
-                android:gravity="center"
-                android:text="."
-                android:textSize="30dp"
-                android:textStyle="bold"
                 android:tag="."
+                android:src="@drawable/ic_baseline_fiber_manual_record_24"
+                android:scaleType="fitCenter"
+                android:padding="39dp"
                 android:backgroundTint="#ffffff"/>
 
             <Button

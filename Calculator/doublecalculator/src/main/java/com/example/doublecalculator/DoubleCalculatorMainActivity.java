@@ -20,10 +20,10 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
     ImageButton allClearButton;
     ImageButton clearEntryButton;
     ImageButton backSpaceButton;
-    Button decimalButton;
+    ImageButton decimalButton;
 
     Button[] numberButton = new Button[10];
-    ImageButton[] operatorButton = new ImageButton[5];
+    Button[] operatorButton = new Button[5];
     // instance variable
     Calculator calculator = new Calculator();
 
@@ -42,6 +42,7 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
         backSpaceButton = findViewById(R.id.back_space_button);
         decimalButton = findViewById(R.id.decimal_button);
 
+        // i 를 활용할 때
         for (int i = 0; i < numberButton.length; i++) {
             numberButton[i] = findViewById(R.id.number_button_0 + i);
 
@@ -58,8 +59,8 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
                 }
             });
         }
-        for (ImageButton imageButton : operatorButton) {
-            imageButton.setOnClickListener(new View.OnClickListener() {
+        for (Button button : operatorButton) {
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     operatorButtonClick(view);
@@ -113,8 +114,8 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
     private void backSpaceButtonClick(View view) {
         if (resultTextView.getText().toString().length() > 1) {
             String getResultString = resultTextView.getText().toString().replace(",", "");
-            String sudString = getResultString.substring(0, getResultString.length() - 1);
-            String decimalString = calculator.getDecimalString(sudString);
+            String subString = getResultString.substring(0, getResultString.length() - 1);
+            String decimalString = calculator.getDecimalString(subString);
             resultTextView.setText(decimalString);
         } else {
             clearText();
@@ -133,7 +134,8 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
     private void clearText() {
         isFirstInput = true;
         resultTextView.setTextColor(0xFF676767);
-        resultTextView.setText(calculator.getclearInputText());
+        // 클래스에 있는 변수를 직접 가져오거나 제어하지 말고 getter and setter 메소드를 만들어서 접근
+        resultTextView.setText(calculator.getClearInputText());
     }
 
     private void operatorButtonClick(View view) {
@@ -147,10 +149,11 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
     private void numberButtonClick(View view) {
         if (isFirstInput) {
             resultTextView.setTextColor(0xFF000000);
+            // tag 는 view 자체에서 받아옴
             resultTextView.setText(view.getTag().toString());
             isFirstInput = false;
         } else {
-            // 10,000  ->  10000
+            // resultTextView 안에 있는 text 를 가져와서 문자로 변환하고 ","을 ""로 바꿈 10,000  ->  10000
             String getResultText = resultTextView.getText().toString().replace(",", "");
             getResultText = getResultText + view.getTag().toString();
             String getDecimalString = calculator.getDecimalString(getResultText);
