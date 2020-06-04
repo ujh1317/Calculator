@@ -2,12 +2,15 @@ package com.example.doublecalculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DoubleCalculatorMainActivity extends AppCompatActivity {
 
@@ -112,13 +115,18 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
     }
 
     private void backSpaceButtonClick(View view) {
-        if (resultTextView.getText().toString().length() > 1) {
-            String getResultString = resultTextView.getText().toString().replace(",", "");
-            String subString = getResultString.substring(0, getResultString.length() - 1);
-            String decimalString = calculator.getDecimalString(subString);
-            resultTextView.setText(decimalString);
+        // backspacebutton 이 결과값을 삭제하지 못하게
+        if (isFirstInput && !calculator.getOperatorString().equals("")) {
+
         } else {
-            clearText();
+            if (resultTextView.getText().toString().length() > 1) {
+                String getResultString = resultTextView.getText().toString().replace(",", "");
+                String subString = getResultString.substring(0, getResultString.length() - 1);
+                String decimalString = calculator.getDecimalString(subString);
+                resultTextView.setText(decimalString);
+            } else {
+                clearText();
+            }
         }
     }
 
@@ -128,12 +136,16 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
 
     private void allClearButtonClick(View view) {
         calculator.setAllClear();
+        // all clear 버튼을 눌렀을 때 scrollview 수식 초기화
+        resultOperatorTextView.setText(calculator.getOperatorString());
         clearText();
     }
 
     private void clearText() {
         isFirstInput = true;
         resultTextView.setTextColor(0xFF676767);
+        // all clear 했을 때 텍스트 사이즈 복구
+        resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 50);
         // 클래스에 있는 변수를 직접 가져오거나 제어하지 말고 getter and setter 메소드를 만들어서 접근
         resultTextView.setText(calculator.getClearInputText());
     }
@@ -143,6 +155,7 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
         String operator = view.getTag().toString();
         String getResult = calculator.getResult(isFirstInput, getResultString, operator);
         resultTextView.setText(getResult);
+        resultOperatorTextView.setText(calculator.getOperatorString());
         isFirstInput = true;
     }
 
@@ -155,9 +168,23 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
         } else {
             // resultTextView 안에 있는 text 를 가져와서 문자로 변환하고 ","을 ""로 바꿈 10,000  ->  10000
             String getResultText = resultTextView.getText().toString().replace(",", "");
-            getResultText = getResultText + view.getTag().toString();
-            String getDecimalString = calculator.getDecimalString(getResultText);
-            resultTextView.setText(getDecimalString);
+            // 입력된 글자의 수가 16자리 초과일 때 입력 제한
+            if (getResultText.length() > 15){
+                Toast.makeText(getApplicationContext(), "16자리 까지 입력 가능합니다.", Toast.LENGTH_SHORT).show();
+            }else {
+                // 12,00005 -> 1,200,005
+                getResultText = getResultText + view.getTag().toString();
+                String getDecimalString = calculator.getDecimalString(getResultText);
+                // 자동 크기 조정이 안되는 SDK 버전이 26이하 일때 문자열을 전달받아 텍스트 사이즈를 리턴
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
+                    if (getDecimalString.length() > 18){
+                        resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 35);
+                    }else if (getDecimalString.length() > 14){
+                        resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
+                    }
+                }
+                resultTextView.setText(getDecimalString);
+            }
         }
     }
 }

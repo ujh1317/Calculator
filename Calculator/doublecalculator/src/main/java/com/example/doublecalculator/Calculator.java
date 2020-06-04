@@ -4,10 +4,11 @@ import java.text.DecimalFormat;
 
 public class Calculator {
 
-    final String CLEAR_INPUT_TEXT = "0";
-    double resultNumber = 0;
-    double lastInputNumber = 0;
-    String operator = "+";
+    private final String CLEAR_INPUT_TEXT = "0";
+    private double resultNumber = 0;
+    private double lastInputNumber = 0;
+    private String operator = "+";
+    private String operatorString = "";
 
     // 천단위 마다 (,)표시, 소수점 5자리 까지 표시
     DecimalFormat decimalFormat = new DecimalFormat("###,###.#####");
@@ -23,6 +24,10 @@ public class Calculator {
         return decimalFormat.format(changeNumber);
     }
 
+    public String getOperatorString() {
+        return operatorString;
+    }
+
     public String getClearInputText() {
         return CLEAR_INPUT_TEXT;
     }
@@ -31,9 +36,11 @@ public class Calculator {
         resultNumber = 0;
         lastInputNumber = 0;
         operator = "+";
+        // all clear 버튼을 눌렀을 때 scrollview 수식 초기화
+        operatorString = "";
     }
 
-    public double doubleCalculator(double result, double lastNumber, String operator) {
+    private double doubleCalculator(double result, double lastNumber, String operator) {
         switch (operator) {
             case "+":
                 result += lastNumber;
@@ -52,10 +59,32 @@ public class Calculator {
     }
 
     public String getResult(boolean isFirstInput, String getResultString, String lastOperator) {
-        lastInputNumber = Double.parseDouble(getResultString.replace(",", ""));
-        resultNumber = doubleCalculator(resultNumber, lastInputNumber, operator);
-        if (!lastOperator.equals("=")) {
-            operator = lastOperator;
+        if (isFirstInput) {
+            if (lastOperator.equals("=")){
+                resultNumber = doubleCalculator(resultNumber, lastInputNumber, operator);
+                operatorString = "";
+            }else {
+                operator = lastOperator;
+                // 공백 상태에서 연산자 버튼을 눌렀을 때
+                if (operatorString.equals("")){
+                    operatorString = getResultString + " " + lastOperator;
+                }else {
+                    // 연사자를 잘못 눌렀을 때
+                    operatorString = operatorString.substring(0, operatorString.length() - 1);
+                    operatorString = operatorString + lastOperator;
+                }
+            }
+
+        } else {
+            lastInputNumber = Double.parseDouble(getResultString.replace(",", ""));
+            resultNumber = doubleCalculator(resultNumber, lastInputNumber, operator);
+            if (lastOperator.equals("=")) {
+                operatorString = "";
+            }else {
+                operatorString = operatorString + " " + getResultString + " " + lastOperator;
+                operator = lastOperator;
+
+            }
         }
         return getDecimalString(resultNumber);
     }

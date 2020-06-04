@@ -34,7 +34,8 @@
             android:layout_weight="50"
             android:text="0"
             android:gravity="center_vertical|right"
-            android:textSize="50sp"/>
+            android:textSize="50sp"
+            android:autoSizeTextType="uniform"/>
     </LinearLayout>
 
     <TextView
