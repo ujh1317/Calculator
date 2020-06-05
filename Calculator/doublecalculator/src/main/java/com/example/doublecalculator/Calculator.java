@@ -11,8 +11,17 @@ public class Calculator {
     private String operatorString = "";
 
     // 천단위 마다 (,)표시, 소수점 5자리 까지 표시
-    DecimalFormat decimalFormat = new DecimalFormat("###,###.#####");
+    DecimalFormat decimalFormat;
 
+    public Calculator() {
+        new DecimalFormat("###,###.#####");
+    }
+
+    public Calculator(DecimalFormat decimalFormat) {
+        this.decimalFormat = decimalFormat;
+    }
+
+    // method overloading
     public String getDecimalString(String changeString) {
         // 문자열의 (,)를 삭제
         String setChangeString = changeString.replace(",", "");
@@ -58,17 +67,18 @@ public class Calculator {
         return result;
     }
 
+    // 연산자 버튼이 연속으로 클릭된 때
     public String getResult(boolean isFirstInput, String getResultString, String lastOperator) {
         if (isFirstInput) {
-            if (lastOperator.equals("=")){
+            if (lastOperator.equals("=")) {
                 resultNumber = doubleCalculator(resultNumber, lastInputNumber, operator);
                 operatorString = "";
-            }else {
+            } else {
                 operator = lastOperator;
                 // 공백 상태에서 연산자 버튼을 눌렀을 때
-                if (operatorString.equals("")){
+                if (operatorString.equals("")) {
                     operatorString = getResultString + " " + lastOperator;
-                }else {
+                } else {
                     // 연사자를 잘못 눌렀을 때
                     operatorString = operatorString.substring(0, operatorString.length() - 1);
                     operatorString = operatorString + lastOperator;
@@ -80,7 +90,7 @@ public class Calculator {
             resultNumber = doubleCalculator(resultNumber, lastInputNumber, operator);
             if (lastOperator.equals("=")) {
                 operatorString = "";
-            }else {
+            } else {
                 operatorString = operatorString + " " + getResultString + " " + lastOperator;
                 operator = lastOperator;
 
