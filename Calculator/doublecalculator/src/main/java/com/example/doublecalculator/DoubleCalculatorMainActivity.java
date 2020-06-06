@@ -125,7 +125,26 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
             if (resultTextView.getText().toString().length() > 1) {
                 String getResultString = resultTextView.getText().toString().replace(",", "");
                 String subString = getResultString.substring(0, getResultString.length() - 1);
-                String decimalString = calculator.getDecimalString(subString);
+
+                // 입력값이 소숫점이 있는 실수인 경우 calculator.getDecimalString() 의 DecimalFormat 의 패턴에 맞추어 0이 삭제되는 오류 수정 - 6/05
+
+                // calculator.getDecimalString() 의 리턴값을 받을 String 변수 선언 - 6/05
+                String decimalString;
+                // 마지막 글자가 삭제된 subString 에 소숫점이 있는지 확인 - 6/05
+                if (subString.contains(".")) {
+                    // 소숫점이 있으면 소숫점을 기준으로 String 배열에 분리해서 저장 - 6/05
+                    String[] subDecimal = subString.split("\\.");
+                    // 소숫점을 기준으로 분리한 String 배열의 갯수가 1이면 소숫점 이하에 숫자가 없다고 판단 - 6/05
+                    if (subDecimal.length == 1) {
+                        // 소숫점 이하의 숫자가 없으므로 소숫점도 같이 삭제 - 6/05
+                        subString = subString.replace(".", "");
+                    }
+                    // calculator.getDecimalString() 패턴을 적용하지 않고 바로 저장 - 6/05
+                    decimalString = subString;
+                    // 소숫점이 없을 때 calculator.getDecimalString() 패턴 적용 - 6/05
+                }else {
+                    decimalString = calculator.getDecimalString(subString);
+                }
                 // backspacebutton 으로 글자수가 줄어들면 텍스트사이즈도 원래대로
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                     resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getStringSize(decimalString));
@@ -183,9 +202,9 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "16자리 까지 입력 가능합니다.", Toast.LENGTH_SHORT).show();
             } else {
                 String getDecimalString;
-                if (view.getTag().toString().equals("0") && resultTextView.getText().toString().contains(".")){
+                if (view.getTag().toString().equals("0") && resultTextView.getText().toString().contains(".")) {
                     getDecimalString = resultTextView.getText().toString() + view.getTag().toString();
-                }else {
+                } else {
                     // 12,00005 -> 1,200,005
                     getResultText = getResultText + view.getTag().toString();
                     getDecimalString = calculator.getDecimalString(getResultText);

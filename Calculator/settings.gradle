@@ -1,2 +1,3 @@
+include ':doublecalculator'
 include ':app'
 rootProject.name = "Calculator"
