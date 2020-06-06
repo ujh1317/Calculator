@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "371410744384",
+    "firebase_url": "https://talk-001-6705c.firebaseio.com",
+    "project_id": "talk-001-6705c",
+    "storage_bucket": "talk-001-6705c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:371410744384:android:e95f63753031fdd5f89ba5",
+        "android_client_info": {
+          "package_name": "com.example.talk_001"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "371410744384-894tg9vq0tqvp2rpj8s537da1bfuo0gf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHtIkRyxavMIuHcewZ8ZTcbpS8FvZEQ-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "371410744384-894tg9vq0tqvp2rpj8s537da1bfuo0gf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
