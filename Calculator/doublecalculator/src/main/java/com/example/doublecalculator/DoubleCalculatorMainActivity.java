@@ -12,26 +12,23 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DecimalFormat;
-
 public class DoubleCalculatorMainActivity extends AppCompatActivity {
 
     boolean isFirstInput = true;
 
-    // button 변수 선언
     ScrollView scrollView;
     TextView resultOperatorTextView;
     TextView resultTextView;
 
-    Button allClearButton;
-    Button clearEntryButton;
-    Button backSpaceButton;
-    Button decimalButton;
+    ImageButton allClearButton;
+    ImageButton clearEntryButton;
+    ImageButton backSpaceButton;
+    ImageButton decimalButton;
 
     Button[] numberButton = new Button[10];
     Button[] operatorButton = new Button[5];
     // instance variable
-    Calculator calculator = new Calculator(new DecimalFormat("###,###.##########"));
+    Calculator calculator = new Calculator();
 
 
     @Override
@@ -125,6 +122,7 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
             if (resultTextView.getText().toString().length() > 1) {
                 String getResultString = resultTextView.getText().toString().replace(",", "");
                 String subString = getResultString.substring(0, getResultString.length() - 1);
+<<<<<<< HEAD
 
                 // 입력값이 소숫점이 있는 실수인 경우 calculator.getDecimalString() 의 DecimalFormat 의 패턴에 맞추어 0이 삭제되는 오류 수정 - 6/05
 
@@ -149,6 +147,9 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                     resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getStringSize(decimalString));
                 }
+=======
+                String decimalString = calculator.getDecimalString(subString);
+>>>>>>> parent of 9d19d63... 6/05 ui 수정
                 resultTextView.setText(decimalString);
             } else {
                 clearText();
@@ -181,9 +182,6 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
         String operator = view.getTag().toString();
         String getResult = calculator.getResult(isFirstInput, getResultString, operator);
         resultTextView.setText(getResult);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getStringSize(getResult));
-        }
         resultOperatorTextView.setText(calculator.getOperatorString());
         isFirstInput = true;
     }
@@ -198,8 +196,9 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
             // resultTextView 안에 있는 text 를 가져와서 문자로 변환하고 ","을 ""로 바꿈 10,000  ->  10000
             String getResultText = resultTextView.getText().toString().replace(",", "");
             // 입력된 글자의 수가 16자리 초과일 때 입력 제한
-            if (getResultText.length() > 15) {
+            if (getResultText.length() > 15){
                 Toast.makeText(getApplicationContext(), "16자리 까지 입력 가능합니다.", Toast.LENGTH_SHORT).show();
+<<<<<<< HEAD
             } else {
                 String getDecimalString;
                 if (view.getTag().toString().equals("0") && resultTextView.getText().toString().contains(".")) {
@@ -212,23 +211,22 @@ public class DoubleCalculatorMainActivity extends AppCompatActivity {
                 // 자동 크기 조정이 안되는 SDK ver.26이하 일때
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                     resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getStringSize(getDecimalString));
+=======
+            }else {
+                // 12,00005 -> 1,200,005
+                getResultText = getResultText + view.getTag().toString();
+                String getDecimalString = calculator.getDecimalString(getResultText);
+                // 자동 크기 조정이 안되는 SDK 버전이 26이하 일때 문자열을 전달받아 텍스트 사이즈를 리턴
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
+                    if (getDecimalString.length() > 18){
+                        resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 35);
+                    }else if (getDecimalString.length() > 14){
+                        resultTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
+                    }
+>>>>>>> parent of 9d19d63... 6/05 ui 수정
                 }
                 resultTextView.setText(getDecimalString);
             }
         }
-    }
-
-    // 문자열을 전달받아 텍스트 사이즈를 리턴
-    private int getStringSize(String getDecimalString) {
-        if (getDecimalString.length() > 30) {
-            return 25;
-        } else if (getDecimalString.length() > 25) {
-            return 30;
-        } else if (getDecimalString.length() > 20) {
-            return 35;
-        } else if (getDecimalString.length() > 15) {
-            return 40;
-        }
-        return 50;
     }
 }
